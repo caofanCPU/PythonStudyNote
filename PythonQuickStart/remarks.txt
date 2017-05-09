@@ -1,0 +1,16 @@
+python多叉树：
+给定条件：在一颗给定多叉树MTree中
+输入：任意指定起点nodeStart，任意指定终点nodeStop
+输出：起点nodeStart到终点nodeStop的最短路径，输出形式例如：[A-->B-->G]
+
+
+python缓存模拟
+给定条件：Cache单向链表中已有50个item，其年龄随机，年龄范围为0~10
+	  Cache容量为100
+	  item特点：每过1秒其年龄自动+1
+	  Cache新增或淘汰item规则：每秒钟在Cache链表的随机位置新增1个年龄为0的item
+				   每秒钟只能淘汰1个item
+				   从链表表头起，若存在item的年龄>10，则淘汰该item
+						 若不存在item的年龄>10，则淘汰表头处第一个item
+				   注意：1.需要注意Cache空间是否满
+					 2.程序模拟时间不得小于200秒
