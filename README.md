@@ -24,7 +24,7 @@ Use Python to touch BigData, MachineLearning and ArtificialIntelligence
 * [Housing price of Boston](https://github.com/caofanCPU/PythonStudyNote/tree/master/MachineLearning&KaggleContest/ML3模型优化/skflow工具包_回归预测波斯顿房价.py)(波士顿房价预测)  
 ***  
 ##Highlights
-![AfterPCA](http://i4.buimg.com/588926/a3c4eede1eb39460.png)  
+![AfterPCA](http://i1.piimg.com/588926/a28673e13fc6f3dd.png)  
 
 ![Optdigits](http://i1.piimg.com/588926/1535a55c29dce308.png)   
 
