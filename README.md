@@ -37,4 +37,4 @@ Use Python to touch BigData, MachineLearning and ArtificialIntelligence.
 
 ***
 ## Remarks
-* For quick start Python, I recommend you to learn [**`python多叉树`**](https://github.com/caofanCPU/PythonStudyNote/tree/master/PythonQuickStart/python多叉树.py) and [**`python缓存模拟`**](https://github.com/caofanCPU/PythonStudyNote/tree/master/PythonQuickStart/python缓存模拟.py). However, it will be difficult to read the code before you know the background story. Reading *Remarks.txt* carefully until you can write some pseudo-code for solving problems.
+&ensp;&emsp;&ensp;&emsp;For quickly starting Python, I recommend you to learn [**`python多叉树`**](https://github.com/caofanCPU/PythonStudyNote/tree/master/PythonQuickStart/python多叉树.py) and [**`python缓存模拟`**](https://github.com/caofanCPU/PythonStudyNote/tree/master/PythonQuickStart/python缓存模拟.py). However, it will be difficult to read the code before you know the background story. Reading *Remarks.txt* carefully until you can write some pseudo-code for solving problems.
