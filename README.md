@@ -24,7 +24,8 @@ Use Python to touch BigData, MachineLearning and ArtificialIntelligence.
 * [Survival possibility analysis for passengers of the Titanic](https://github.com/caofanCPU/PythonStudyNote/tree/master/MachineLearning&KaggleContest/ML2全套/坦坦尼克号沉船事故乘客生还可能性预测.py)(泰坦尼克号沉船事故乘客生还可能性分析)
 * [Housing price of Boston](https://github.com/caofanCPU/PythonStudyNote/tree/master/MachineLearning&KaggleContest/ML3模型优化/skflow工具包_回归预测波斯顿房价.py)(波士顿房价预测)  
 ***  
-##Highlights
+## Highlights
+
 ![AfterPCA](http://i1.piimg.com/588926/a28673e13fc6f3dd.png)  
 
 ![Optdigits](http://i1.piimg.com/588926/1535a55c29dce308.png)   
