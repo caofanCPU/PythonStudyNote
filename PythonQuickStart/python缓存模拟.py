@@ -7,6 +7,7 @@ Created on Mon Feb 13 22:47:46 2017
 
 import random
 
+
 # =======================================================
 # =======  Item类，包含Item编号、周期时长、在缓存中的索引ID
 # =======      
@@ -18,7 +19,7 @@ class Item:
     #              如有需要，可用于进行队列插入、删除后更新队列
     #              但本程序属于随机模拟，用不到此属性
     #           属性indexID为Item在缓存空间中的位置，即缓存空间占用索引编号
-    def __init__( self, ID, IndexID ):
+    def __init__(self, ID, IndexID):
         self.id = ID
         self.age = 0
         self.nextItem = []
@@ -32,44 +33,43 @@ class Item:
 # =======                       占用缓存空间索引列表list_Index
 # =======              返回参数：更新后的占用缓存空间索引列表
 # ======================================================= 
-def drop( CacheList, list_Index ):
+def drop(CacheList, list_Index):
     # CacheLength保存当前缓存空间已被占用的长度
-    CacheLength = len( list_Index )
+    CacheLength = len(list_Index)
     # firstItem_index为缓存空间队首Item的占用索引编号
     firstItem_Index = list_Index[0]
-    print( ">>>>>>淘汰前占用缓存空间索引列表：", list_Index )
+    print(">>>>>>淘汰前占用缓存空间索引列表：", list_Index)
     # 先判断缓存空间是否被占满，保障Item添加操作
-    if CacheLength == len( CacheList ):
-        print( "----缓存占满淘汰队首%d----" % CacheList[firstItem_Index].id )
+    if CacheLength == len(CacheList):
+        print("----缓存占满淘汰队首%d----" % CacheList[firstItem_Index].id)
         # 将被淘汰的Item的占用索引编号，从占用缓存空间索引列表中剔除
         # 这相当于更新占用缓存空间索引列表
-        list_Index.remove( firstItem_Index )
+        list_Index.remove(firstItem_Index)
         # 再对被淘汰的Item所占用的缓存空间作初始化操作
         # 并将此Item的编号设置为-1，做已被淘汰标记
-        CacheList[firstItem_Index].__init__( ID = -1, IndexID = -1 )
-        print( ">>>>>>>>淘汰后检测索引列表", list_Index )
+        CacheList[firstItem_Index].__init__(ID=-1, IndexID=-1)
+        print(">>>>>>>>淘汰后检测索引列表", list_Index)
         # 将更新后的占用缓存空间索引列表返回
         return list_Index
-    else: 
+    else:
         # 利用当前的占用缓存空间索引列表
         # 从左至右顺序遍历占用缓存空间的Item
         # 一旦发现当前Item的周期时长大于10，将此Item淘汰，结束遍历
         for i in list_Index:
             if CacheList[i].age > 10:
-                print( "------Item编号%d因周期超时而被淘汰" %\
-                          CacheList[i].indexID )
+                print("------Item编号%d因周期超时而被淘汰" % CacheList[i].indexID)
                 # 更新占用缓存空间索引列表
-                list_Index.remove( i )
+                list_Index.remove(i)
                 # 再对被淘汰的Item所占用的缓存空间作初始化操作
                 # 并将此Item的编号设置为-1，做已被淘汰标记
-                CacheList[i].__init__( ID = -1, IndexID = -1 )
-                
+                CacheList[i].__init__(ID=-1, IndexID=-1)
+
                 # 【由于每次只能删除一个Item】，因而优先删除最靠近队首的Item
                 # break缩进在周期时长是否大于10的判断内！！！！
                 break
-        print( ">>>>>>>>淘汰后检测索引列表", list_Index )
+        print(">>>>>>>>淘汰后检测索引列表", list_Index)
         return list_Index
-            
+
 
 # =======================================================
 # =======  添加操作API，先执行淘汰操作API，保证有可用缓存空间
@@ -78,29 +78,28 @@ def drop( CacheList, list_Index ):
 # =======                       待添加的Item的唯一编号maxID
 # =======              返回参数：更新后的占用缓存空间索引列表
 # ======================================================= 
-def add( CacheList, list_Index, maxID ):
+def add(CacheList, list_Index, maxID):
     # 添加新的Item前，先执行检查及淘汰操作
     # 检查缓存空间是否满；淘汰周期超时且最接近队首的Item或缓存空间已满下的队首Item
     # 以此保障一定有缓存空间添加新的Item
-    
+
     # 执行淘汰操作API，得到更新后的占用空间索引列表
-    list_Index = drop( CacheList, list_Index )
+    list_Index = drop(CacheList, list_Index)
     # 淘汰Item后再随机添加新的Item
     # 逆向思维考虑：相当于在CacheList中随机选取其空余空间
-    
+
     # spareIndex表示缓存空间可用的占用索引
-    spareIndex = [i for i in range( len( CacheList ) )\
-                      if not i in list_Index ]
+    spareIndex = [i for i in range(len(CacheList)) if not i in list_Index]
     # 从可用的占用索引中随机选取1个
-    insert_Index = random.sample( spareIndex, 1 )[0]
+    insert_Index = random.sample(spareIndex, 1)[0]
     # 更新占用缓存空间列表CacheList
     # 保存新添加的Item的唯一编号、缓存空间的占用索引
     CacheList[insert_Index].id = maxID
     CacheList[insert_Index].indexID = insert_Index
-    
+
     # 执行更新操作API，返回的是最新的占用缓存空间索引列表list_Index
-    return structure_update( CacheList )
-    
+    return structure_update(CacheList)
+
 
 # =======================================================
 # =======  更新操作API，监视当前的缓存空间被占用的情况
@@ -108,25 +107,25 @@ def add( CacheList, list_Index, maxID ):
 # =======              返回参数：更新后的占用缓存空间索引列表
 # ======================================================= 
 # 在随机空间中确定Item在CacheList中的相对排列顺序
-def structure_update( CacheList ):
+def structure_update(CacheList):
     # 保存缓存空间被占用的索引列表
-    list_Index = [ i for i in range( 100 ) if CacheList[i].indexID != -1 ]
-    print( "----占用缓存空间索引列表----\n", list_Index )
+    list_Index = [i for i in range(100) if CacheList[i].indexID != -1]
+    print("----占用缓存空间索引列表----\n", list_Index)
     # 保存当前缓存空间被占用的长度
-    CacheLength = len( list_Index )
-    print( "----占用缓存空间长度：", CacheLength )
-    print( "占用缓存空间Item信息如下：" )
-    
+    CacheLength = len(list_Index)
+    print("----占用缓存空间长度：", CacheLength)
+    print("占用缓存空间Item信息如下：")
+
     # 将当前缓存空间中存在的Item构建成单向链表
     # 本模拟程序可此步骤
-    for i in range( CacheLength - 1 ):
-        CacheList[list_Index[i]].nextItem = CacheList[list_Index[i+1]]
-        print( "ID编号", CacheList[list_Index[i]].id,
-               "--周期时长", CacheList[list_Index[i]].age )
-    CacheList[list_Index[CacheLength-1]].nextItem = []
-    
+    for i in range(CacheLength - 1):
+        CacheList[list_Index[i]].nextItem = CacheList[list_Index[i + 1]]
+        print("ID编号", CacheList[list_Index[i]].id, "--周期时长", CacheList[list_Index[i]].age)
+    CacheList[list_Index[CacheLength - 1]].nextItem = []
+
     # 返回最新的占用空间索引列表list_Index
     return list_Index
+
 
 # =======================================================
 # =======  主函数，初始化：
@@ -135,41 +134,40 @@ def structure_update( CacheList ):
 
 # ======================================================= 
 # initIDSeq为初始状态下50个Item之间的相对位置随机序列
-initIDSeq = random.sample( range( 50 ), 50 )
+initIDSeq = random.sample(range(50), 50)
 # initListIndex：在缓存空间【100个】中随机选取【50个】，作为初始占用缓存空间索引列表
-initListIndex = random.sample( range( 100 ), 50 )
+initListIndex = random.sample(range(100), 50)
 # 构造缓存空间CacheList，默认大小100，CacheList中容纳的是Item对象
 CacheList = []
-for i in range( 100 ):
-    CacheList.append( Item( ID = i, IndexID = -1 ) )
+for i in range(100):
+    CacheList.append(Item(ID=i, IndexID=-1))
 
 # 初始化50个Item的属性：唯一编号、周期时长、占用缓存空间索引编号
-for i, id in zip( initListIndex, initIDSeq ):
+for i, id in zip(initListIndex, initIDSeq):
     CacheList[i].ID = id
-    CacheList[i].age = random.randint( 0, 10 )
+    CacheList[i].age = random.randint(0, 10)
     CacheList[i].indexID = i
 # 调用更新操作API，获取当前最新的缓存空间占用索引列表list_Index
-list_Index = structure_update( CacheList )
+list_Index = structure_update(CacheList)
 
 # 设置模拟次数，默认200
 Time = 200
 # 开启模拟测试
 while Time:
-    
-    print( "========time-%d========" % ( 200 - Time ) )
-    print( "=========本次循环占用缓存空间Item起始周期时长列表：" )
+
+    print("========time-%d========" % (200 - Time))
+    print("=========本次循环占用缓存空间Item起始周期时长列表：")
     for i in list_Index:
         CacheList[i].age += 1
-        print( CacheList[i].age, end = '-' )
-    print( "--------------------------------\n" )
+        print(CacheList[i].age, end='-')
+    print("--------------------------------\n")
 
     # 计算本次应添加的Item的唯一编号
     maxID = 250 - Time
     # 调用添加API
-    list_Index = add( CacheList, list_Index, maxID )
+    list_Index = add(CacheList, list_Index, maxID)
     # 循环变量递减，逐步逼近循环结束条件
     Time -= 1
-
 
 """
 运行结果部分：

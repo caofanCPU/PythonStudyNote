@@ -4,10 +4,11 @@ Created on Wed Jan  4 23:47:28 2017
 
 @author: CY_XYZ
 """
+import os
+
+import numpy as np
 # 导入pandas、numpy工具包
 import pandas as pd
-import numpy as np
-import os
 
 # 获得手写数字图像数据框，保存在变量digits_train中
 
@@ -39,8 +40,8 @@ inputPar = os.path.dirname(__file__)
 inputTrain = inputPar + os.path.sep + 'optdigits_train.tra'
 inputTest = inputPar + os.path.sep + 'optdigits_test.txt'
 print(inputTrain)
-digits_train = pd.read_csv( inputTrain, header = None )
-digits_test = pd.read_csv( inputTest, header = None )
+digits_train = pd.read_csv(inputTrain, header=None)
+digits_test = pd.read_csv(inputTest, header=None)
 
 '''数据集2(非原书)
 digits_train = pd.read_csv( 'G:/P_Anaconda3-4.2.0/PA-WORK/AI-ML机器学习/'\
@@ -52,8 +53,8 @@ y_digits = digits_train[16]
 #########################################
 
 # 输出训练集、测试集的数据规模和维度信息
-print( digits_train.shape )
-print( digits_test.shape )
+print(digits_train.shape)
+print(digits_test.shape)
 
 #########################################
 #########################################
@@ -67,17 +68,19 @@ y_digits = digits_train[64]
 
 # 导入sklearn.decomposition保重的PCA模块
 from sklearn.decomposition import PCA
-estimator = PCA( n_components = 2 )
-X_pca = estimator.fit_transform( X_digits )
+
+estimator = PCA(n_components=2)
+X_pca = estimator.fit_transform(X_digits)
 # 导入matplotlib包中的pyplot模块，为绘图做准备
 from matplotlib import pyplot as plt
+
 
 # Python3中xrange(  )函数报错解决方法：
 # 不是取消了xrange，而是取消了range，同时将xrange重新命名成range;
 # 如果希望生成原来的列表形式的range，只要用list(range(...))就可以了。
 
 # 自定义一个函数plot_pca_scatter(  )函数
-def plot_pca_scatter(  ):
+def plot_pca_scatter():
     # 注释也要注意缩进，否则报错！！！
     # 设定10种颜色white的小圆圈分别标记0、1、2、3、4、5、6、7、8、9共10个数字结果
     # 黑色'black'标记   0
@@ -90,18 +93,9 @@ def plot_pca_scatter(  ):
     # 青色'cyan'标记    7
     # 橙色'orange'标记  8
     # 灰色'grey'标记    9
-    colors = [ 'black',
-               'blue',
-               'purple',
-               'yellow',
-               'white',
-               'red',
-               'lime',
-               'cyan',
-               'orange',
-               'grey' ]
+    colors = ['black', 'blue', 'purple', 'yellow', 'white', 'red', 'lime', 'cyan', 'orange', 'grey']
     # 新建画图窗口并命名为'手写体数字PCA二维空间分布'
-    plt.figure( '手写体数字PCA二维空间分布' )
+    plt.figure('手写体数字PCA二维空间分布')
     ##########################################    
     '''
     # 中途尝试过使用sklearn.datasets内置数据集
@@ -116,77 +110,76 @@ def plot_pca_scatter(  ):
     '''
     ###########################################
     # 使用for循环+range(  )迭代器
-    for i in range( len( colors ) ):
+    for i in range(len(colors)):
         # y_digits是一个序列对象，可用.as_matrix()或者.values取到值
         # 且y_digits的值已经为0~9共10个整数
         # [ y_digits.as_matrix(  ) == i ]用于提取0~9对应的数据值索引
         # X_pca[:,0]用于提取第一列
         # 合起来即为提取出全为i结果的数据的横坐标px，纵坐标py
-        px = X_pca[:,0][ y_digits.as_matrix(  ) == i ]
-        py = X_pca[:,1][ y_digits.values == i ]
+        px = X_pca[:, 0][y_digits.as_matrix() == i]
+        py = X_pca[:, 1][y_digits.values == i]
         # 绘制手写数字图片PCA结果为i的散点图
-        plt.scatter( px, py, c = colors[i] )
-    
+        plt.scatter(px, py, c=colors[i])
+
     # 通过for循环，成功绘制了0~9结果的10种叠加散点图
-    
+
     # 按照绘制顺序给绘图窗口添加'0'~'9'共10个图例
-    plt.legend( np.arange( 0, 10 ).astype( str ) )
+    plt.legend(np.arange(0, 10).astype(str))
     # x轴标注
-    plt.xlabel( 'First Principal Component' )
+    plt.xlabel('First Principal Component')
     # y轴标注
-    plt.ylabel( 'Second Principal Component' )
+    plt.ylabel('Second Principal Component')
     # 显示绘图窗口
-    plt.show(  )
+    plt.show()
+
+
 # 自定义函数结束
 
 # 直接调用自定义函数，不带任何参数   
-plot_pca_scatter(  )
+plot_pca_scatter()
 
 ##################################
 ##################################
 # 使用原始数据像素特征和经过PCA压缩重建(特征降维)后的低维特征
 # 在相同配置下的支持向量机(分类)模型上分别进行手写体数字(图像)识别
 # 对训练集、测试集进行特征向量、目标变量的分割
-X_train = digits_train[np.arange( 64 )]
+X_train = digits_train[np.arange(64)]
 y_train = digits_train[64]
-X_test = digits_test[np.arange( 64 )]
+X_test = digits_test[np.arange(64)]
 y_test = digits_test[64]
 
 # 从sklearn.svm导入基于线性核的支持向量机分类模型LinearSVC
 from sklearn.svm import LinearSVC
+
 # 使用默认配置初始化LinearSVC，对原始64维像素特征的训练数据进行建模，并作出预测
-linear_svc = LinearSVC(  )
-linear_svc.fit( X_train, y_train )
-linear_svc_y_predict = linear_svc.predict( X_test )
+linear_svc = LinearSVC()
+linear_svc.fit(X_train, y_train)
+linear_svc_y_predict = linear_svc.predict(X_test)
 
 # 使用PCA将原始64维数据压缩重建为20维数据
 # 导入sklearn.decomposition保重的PCA模块
 from sklearn.decomposition import PCA
-estimator = PCA( n_components = 2 )
+
+estimator = PCA(n_components=2)
 # 训练集原始特征【适应转化】至20个正交方向
 # 测试集原始特征【转化】至20个正交方向
-pca_X_train = estimator.fit_transform( X_train )
-pca_X_test = estimator.transform( X_test )
+pca_X_train = estimator.fit_transform(X_train)
+pca_X_test = estimator.transform(X_test)
 # 使用默认配置初始化LinearSVC，对压缩重建后的20维训练数据进行建模，并作出预测
-pca_svc = LinearSVC(  )
-pca_svc.fit( pca_X_train, y_train )
-pca_svc_y_predict = pca_svc.predict( pca_X_test )
+pca_svc = LinearSVC()
+pca_svc.fit(pca_X_train, y_train)
+pca_svc_y_predict = pca_svc.predict(pca_X_test)
 
 # 对于基于线性核的支持向量机分类模型，在原始64维度数据、压缩重建后的20维度数据识别性能评估
 # 从sklearn.metrics导入classification_report进行详细性能分析
 from sklearn.metrics import classification_report
-print( '----线性核SVC在原始64维度数据的性能----' )
-print( linear_svc.score( X_test, y_test ) )
-print( classification_report( y_test,
-                              linear_svc_y_predict,
-                              target_names = np.arange( 10 )\
-                                                            .astype( str ) ) )
-print( '----线性核SVC在压缩重建后20维度数据的性能----' )
-print( pca_svc.score( pca_X_test, y_test ) )
-print( classification_report( y_test,
-                              pca_svc_y_predict,
-                              target_names = np.arange( 10 )\
-                                                            .astype( str ) ) )
+
+print('----线性核SVC在原始64维度数据的性能----')
+print(linear_svc.score(X_test, y_test))
+print(classification_report(y_test, linear_svc_y_predict, target_names=np.arange(10).astype(str)))
+print('----线性核SVC在压缩重建后20维度数据的性能----')
+print(pca_svc.score(pca_X_test, y_test))
+print(classification_report(y_test, pca_svc_y_predict, target_names=np.arange(10).astype(str)))
 
 """
 运行结果：

@@ -5,40 +5,43 @@ Created on Wed Jan 18 02:47:43 2017
 @author: CY_XYZ
 """
 # Pizza饼已知训练数据集
-X_train = [ [6], [8], [10], [14], [18] ]
-y_train = [ [7], [9], [13], [17.5], [18] ]
+X_train = [[6], [8], [10], [14], [18]]
+y_train = [[7], [9], [13], [17.5], [18]]
 
 # 使用线性回归模型预测
 from sklearn.linear_model import LinearRegression
-lr = LinearRegression(  )
-lr.fit( X_train, y_train )
+
+lr = LinearRegression()
+lr.fit(X_train, y_train)
 
 import numpy as np
-# 在x轴上从0到26(不包含)均匀采样100个数据点作为测试
-xx = np.linspace( 0, 26, 100 )
-xx = xx.reshape( xx.shape[0], 1 )
 
-yy_predict = lr.predict( xx )
+# 在x轴上从0到26(不包含)均匀采样100个数据点作为测试
+xx = np.linspace(0, 26, 100)
+xx = xx.reshape(xx.shape[0], 1)
+
+yy_predict = lr.predict(xx)
 ######################################################
 # 使用2次多项式回归模型预测
 from sklearn.preprocessing import PolynomialFeatures
-poly2 = PolynomialFeatures( degree = 2 )
-X_train_poly2 = poly2.fit_transform( X_train )
-lr_poly2 = LinearRegression(  )
-lr_poly2.fit( X_train_poly2, y_train )
+
+poly2 = PolynomialFeatures(degree=2)
+X_train_poly2 = poly2.fit_transform(X_train)
+lr_poly2 = LinearRegression()
+lr_poly2.fit(X_train_poly2, y_train)
 # 重新映射绘图用x轴采样数据
-xx_poly2 = poly2.transform( xx )
-yy_poly2_predict = lr_poly2.predict( xx_poly2 )
+xx_poly2 = poly2.transform(xx)
+yy_poly2_predict = lr_poly2.predict(xx_poly2)
 ######################################################
 # 使用4次多项式回归模型预测
 # from sklearn.preprocessing import PolynomialFeatures
-poly4 = PolynomialFeatures( degree = 4 )
-X_train_poly4 = poly4.fit_transform( X_train )
-lr_poly4 = LinearRegression(  )
-lr_poly4.fit( X_train_poly4, y_train )
+poly4 = PolynomialFeatures(degree=4)
+X_train_poly4 = poly4.fit_transform(X_train)
+lr_poly4 = LinearRegression()
+lr_poly4.fit(X_train_poly4, y_train)
 # 重新映射绘图用x轴采样数据
-xx_poly4 = poly4.transform( xx )
-yy_poly4_predict = lr_poly4.predict( xx_poly4 )
+xx_poly4 = poly4.transform(xx)
+yy_poly4_predict = lr_poly4.predict(xx_poly4)
 ######################################################
 # 绘图函数plt.plot常用参数
 '''
@@ -93,24 +96,25 @@ gnuplot 中的steps： 'steps' （只能用于kwarg中）
 线宽（linewidth）：linewidth： 实数
 '''
 import matplotlib.pyplot as plt
-plt.figure( 'Figure of Train Data' )
-plt.scatter( X_train, y_train, s = 150, c = 'k')
-plt.grid( True )
-plt1, = plt.plot( xx, yy_predict, label = 'Degree = 1', linewidth = 3 )
-plt2, = plt.plot( xx, yy_poly2_predict, label = 'Degree = 2', linewidth = 3 )
-plt4, = plt.plot( xx, yy_poly4_predict, label = 'Degree = 4', linewidth = 3 )
+
+plt.figure('Figure of Train Data')
+plt.scatter(X_train, y_train, s=150, c='k')
+plt.grid(True)
+plt1, = plt.plot(xx, yy_predict, label='Degree = 1', linewidth=3)
+plt2, = plt.plot(xx, yy_poly2_predict, label='Degree = 2', linewidth=3)
+plt4, = plt.plot(xx, yy_poly4_predict, label='Degree = 4', linewidth=3)
 # 标注坐标轴：plt.axis( xmin, xmax, ymin, ymax )
-plt.axis( [0, 25, 0, 25] )
-plt.xlabel( 'Diameter of Pizza' )
-plt.ylabel( 'Price of Pizza' )
-plt.legend( handles = [plt1, plt2, plt4] )
+plt.axis([0, 25, 0, 25])
+plt.xlabel('Diameter of Pizza')
+plt.ylabel('Price of Pizza')
+plt.legend(handles=[plt1, plt2, plt4])
 # plt.show(  )
-print( 'The R-squared value of LinearRegression performing'\
-       'on the training data is:', lr.score( X_train, y_train ) )
-print( 'The R-squared value of LinearRegression performing'\
-       'on the training data is:', lr_poly2.score( X_train_poly2, y_train ) )
-print( 'The R-squared value of LinearRegression performing'\
-       'on the training data is:', lr_poly4.score( X_train_poly4, y_train ) )
+print('The R-squared value of LinearRegression performing' \
+      'on the training data is:', lr.score(X_train, y_train))
+print('The R-squared value of LinearRegression performing' \
+      'on the training data is:', lr_poly2.score(X_train_poly2, y_train))
+print('The R-squared value of LinearRegression performing' \
+      'on the training data is:', lr_poly4.score(X_train_poly4, y_train))
 '''
 运行结果：
 The R-squared value of LinearRegression performingon the training data is: 
@@ -133,29 +137,29 @@ The R-squared value of LinearRegression performingon the test data is:
 # 赛事主办方拿着真实结果评估你的模型性能
 # 整个流程类似本例
 # 准备测试数据
-X_test = [ [6], [8], [11], [16] ]
-y_test = [ [8], [12], [15], [18] ]
-plt.figure( 'Figure of Test Data' )
-plt.scatter( X_test, y_test, s = 150, c = 'y')
-plt.grid( True )
-plt1, = plt.plot( xx, yy_predict, label = 'Degree = 1', linewidth = 3 )
-plt2, = plt.plot( xx, yy_poly2_predict, label = 'Degree = 2', linewidth = 3 )
-plt4, = plt.plot( xx, yy_poly4_predict, label = 'Degree = 4', linewidth = 3 )
+X_test = [[6], [8], [11], [16]]
+y_test = [[8], [12], [15], [18]]
+plt.figure('Figure of Test Data')
+plt.scatter(X_test, y_test, s=150, c='y')
+plt.grid(True)
+plt1, = plt.plot(xx, yy_predict, label='Degree = 1', linewidth=3)
+plt2, = plt.plot(xx, yy_poly2_predict, label='Degree = 2', linewidth=3)
+plt4, = plt.plot(xx, yy_poly4_predict, label='Degree = 4', linewidth=3)
 # 标注坐标轴：plt.axis( xmin, xmax, ymin, ymax )
-plt.axis( [0, 25, 0, 25] )
-plt.xlabel( 'Diameter of Pizza' )
-plt.ylabel( 'Price of Pizza' )
-plt.legend( handles = [plt1, plt2, plt4] )
+plt.axis([0, 25, 0, 25])
+plt.xlabel('Diameter of Pizza')
+plt.ylabel('Price of Pizza')
+plt.legend(handles=[plt1, plt2, plt4])
 # plt.show(  )
-print( 'The R-squared value of LinearRegression performing'\
-       'on the test data is:', lr.score( X_test, y_test ) )
-X_test_poly2 = poly2.transform( X_test )
-print( 'The R-squared value of LinearRegression performing'\
-       'on the test data is:', lr_poly2.score( X_test_poly2, y_test ) )
-X_test_poly4 = poly4.transform( X_test )
-print( 'The R-squared value of LinearRegression performing'\
-       'on the test data is:', lr_poly4.score( X_test_poly4, y_test ) )
-print( '-----------------------------------------------------------------' )
+print('The R-squared value of LinearRegression performing' \
+      'on the test data is:', lr.score(X_test, y_test))
+X_test_poly2 = poly2.transform(X_test)
+print('The R-squared value of LinearRegression performing' \
+      'on the test data is:', lr_poly2.score(X_test_poly2, y_test))
+X_test_poly4 = poly4.transform(X_test)
+print('The R-squared value of LinearRegression performing' \
+      'on the test data is:', lr_poly4.score(X_test_poly4, y_test))
+print('-----------------------------------------------------------------')
 ########################################################################
 ########################################################################
 # 本例中，1次线性回归属于欠拟合
@@ -165,27 +169,27 @@ print( '-----------------------------------------------------------------' )
 # L2范数使得参数向量中大部分元素变得很小，压制了参数之间的差异
 #####L1范数正则化前后对比
 from sklearn.linear_model import Lasso
-lasso_poly4 = Lasso(  )
-lasso_poly4.fit( X_train_poly4, y_train )
-print( 'The R-squared value of [Lasso] LinearRegression performing'\
-       'on the test data is:', lasso_poly4.score( X_test_poly4, y_test ) )
+
+lasso_poly4 = Lasso()
+lasso_poly4.fit(X_train_poly4, y_train)
+print('The R-squared value of [Lasso] LinearRegression performing' \
+      'on the test data is:', lasso_poly4.score(X_test_poly4, y_test))
 # 对比L1范数正则化前后4次多项式得参数列表
-print( 'Before Lasso:\n', lr_poly4.coef_ )
-print( 'After Lasso:\n', lasso_poly4.coef_ )
+print('Before Lasso:\n', lr_poly4.coef_)
+print('After Lasso:\n', lasso_poly4.coef_)
 #####L2范数正则化前后对比
 from sklearn.linear_model import Ridge
-ridge_poly4 = Ridge(  )
-ridge_poly4.fit( X_train_poly4, y_train )
-print( '-----------------------------------------------------------------' )
-print( 'The R-squared value of LinearRegression performing'\
-       'on the test data is:', lr_poly4.score( X_test_poly4, y_test ) )
-print( 'The R-squared value of [Ridge] LinearRegression performing'\
-       'on the test data is:', ridge_poly4.score( X_test_poly4, y_test ) )
+
+ridge_poly4 = Ridge()
+ridge_poly4.fit(X_train_poly4, y_train)
+print('-----------------------------------------------------------------')
+print('The R-squared value of LinearRegression performing' \
+      'on the test data is:', lr_poly4.score(X_test_poly4, y_test))
+print('The R-squared value of [Ridge] LinearRegression performing' \
+      'on the test data is:', ridge_poly4.score(X_test_poly4, y_test))
 # 对比L1范数正则化前后4次多项式得参数列表
-print( 'Before Lasso:\n', lr_poly4.coef_,
-       '\nSum-Squared value is:', np.sum( lr_poly4.coef_ ** 2 ) )
-print( 'After Lasso:\n', ridge_poly4.coef_,
-       '\nSum-Squared value is:', np.sum( ridge_poly4.coef_ ** 2 ) )
+print('Before Lasso:\n', lr_poly4.coef_, '\nSum-Squared value is:', np.sum(lr_poly4.coef_ ** 2))
+print('After Lasso:\n', ridge_poly4.coef_, '\nSum-Squared value is:', np.sum(ridge_poly4.coef_ ** 2))
 '''
 运行结果：
 The R-squared value of LinearRegression performingon the training data is: 

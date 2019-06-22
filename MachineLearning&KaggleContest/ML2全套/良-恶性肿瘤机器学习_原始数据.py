@@ -15,24 +15,14 @@ runfile( 'G:/P_Anaconda3-4.2.0/PA-WORK/AI-ML机器学习/'\
 @author: CY_XYZ
 """
 
+import os
+
 # 导入numpy与pandas工具包
 import numpy as np
 import pandas as pd
-import os
 
 # 根据原始数据的描述文件，创建特征列表
-column_names = [ 'Sample code number',
-                 'Clump Thickness',
-                 'Uniformity of Cell Size',
-                 'Uniformity of Cell Shape',
-                 'Marginal Adhesion',
-                 'Single Epithelial Cell Size',
-                 'Bare Nuclei',
-                 'Bland Chromatin',
-                 'Normal Nucleoli',
-                 'Mitoses',
-                 'Class'
-                 ]
+column_names = ['Sample code number', 'Clump Thickness', 'Uniformity of Cell Size', 'Uniformity of Cell Shape', 'Marginal Adhesion', 'Single Epithelial Cell Size', 'Bare Nuclei', 'Bland Chromatin', 'Normal Nucleoli', 'Mitoses', 'Class']
 # 使用pandas.read_csv函数从互联网读取指定数据，在想换行的地方加上'\
 '''
 html_Sdata = pd.read_csv( 'https://archive.ics.uci.edu/ml/'\
@@ -44,30 +34,26 @@ html_Sdata = pd.read_csv( 'https://archive.ics.uci.edu/ml/'\
 # 若网速受限，建议先下载到本地；文件路劲太长，分字符串'\；读取原始数据到变量Sdata
 inputPar = os.path.dirname(__file__)
 inputFile = inputPar + os.path.sep + 'breast-cancer-wisconsin.txt'
-Sdata = pd.read_csv( inputFile, names = column_names )
+Sdata = pd.read_csv(inputFile, names=column_names)
 # 将缺失值标记'?'替换为'NA'；原始数据的缺失值标记必须查看原始数据说明文档
-data = Sdata.replace( to_replace = '?', value = np.nan )
+data = Sdata.replace(to_replace='?', value=np.nan)
 # 替换原始数据的缺失值后，查看缺失值所在行的信息,以及多少行带有缺失值
 NaN_data = data[data.isnull().values == True]
-NaN_length = len( NaN_data )
+NaN_length = len(NaN_data)
 
 # 剔除带有缺失值的数据，只要有一个维度缺失就剔除
-ok_data = data.dropna( how = 'any' )
+ok_data = data.dropna(how='any')
 # 输出ok_data数据量和维度
-print( data.shape )
-print( NaN_data.shape )
-print( ok_data.shape )
-
+print(data.shape)
+print(NaN_data.shape)
+print(ok_data.shape)
 
 # 将ok_data数据的25%作为测试集，其余75%作为训练集
 # 使用sklearn.cross_validation里的train_test_split模块用于分个数据
 from sklearn.cross_validation import train_test_split
+
 # 随机采样25%的数据用于测试集，其余75%作为训练集
-X_train, X_test, y_train, y_test =\
-train_test_split( ok_data[column_names[1:10]],
-                  ok_data[column_names[10]],
-                  test_size = 0.25,                                                    
-                  random_state = 33 )
+X_train, X_test, y_train, y_test = train_test_split(ok_data[column_names[1:10]], ok_data[column_names[10]], test_size=0.25, random_state=33)
 '''
 上句代码解读：ok_data[column_names[1:10]] 是选取第1列~第9列作为X
             ok_data[column_names[10]]   是选取第10列作为y
@@ -104,22 +90,21 @@ from sklearn.linear_model import SGDClassifier
 
 # 标准化数据，保证每个维度的特征数据方差为1，均值为0
 # 使得预测结果不会被某些维度过大的特征值所主导，注意训练集和测试集标准化时的区别
-ss = StandardScaler(  )
-ss_X_train = ss.fit_transform( X_train )
-ss_X_test = ss.transform( X_test )
+ss = StandardScaler()
+ss_X_train = ss.fit_transform(X_train)
+ss_X_test = ss.transform(X_test)
 
 # 初始化LogisticRegression和SGDClassifier
-lr = LogisticRegression(  )
-sgdc = SGDClassifier(  )
+lr = LogisticRegression()
+sgdc = SGDClassifier()
 # 调用LogisticRegression中的fit函数/模块来训练模型参数
-lr.fit( ss_X_train, y_train )
+lr.fit(ss_X_train, y_train)
 # 使用训练好的模型lr对X_test进行预测，结果保存至变量lr_y_predict
-lr_y_predict = lr.predict( ss_X_test )
+lr_y_predict = lr.predict(ss_X_test)
 # 调用SGDClassifier中的fit函数/模块来训练模型参数
-sgdc.fit( ss_X_train, y_train )
+sgdc.fit(ss_X_train, y_train)
 # 使用训练好的模型sgdc对X_test进行预测，结果保存至sgdc_y_predict
-sgdc_y_predict = sgdc.predict( ss_X_test )
-
+sgdc_y_predict = sgdc.predict(ss_X_test)
 
 # 序列Series对象才具有.loc()方法、.values和.index属性
 # 单独提取序列Series对象的index和values
@@ -149,23 +134,23 @@ sgdc_y_predict_negative = S_sgdc_y_predict.loc[S_sgdc_y_predict.values == 4].val
 
 # 导入matplotlib工具包中的pyplot并简化命名plt
 import matplotlib.pyplot as plt
+
 #
-arange_x = np.arange( 1, len( y_test )+1 ) 
-plt.scatter( arange_x, y_test.values, marker = 'o', s = 2, c = 'red' )
-plt.scatter( arange_x, lr_y_predict, marker = '*', s = 2, c = 'green' )
-plt.scatter( arange_x, sgdc_y_predict, marker = '+', s = 2, c = 'blue' )
-plt.show(  )
+arange_x = np.arange(1, len(y_test) + 1)
+plt.scatter(arange_x, y_test.values, marker='o', s=2, c='red')
+plt.scatter(arange_x, lr_y_predict, marker='*', s=2, c='green')
+plt.scatter(arange_x, sgdc_y_predict, marker='+', s=2, c='blue')
+plt.show()
 
 # 以准确性Accuracy、精确率Precision、召回率Recall、F1综合4个指标来评价模型
 # 从sklearn.metrics导入classification_report模块
 from sklearn.metrics import classification_report
+
 # 使用逻辑斯蒂回归分类模型自带评分函数score获得逻辑斯蒂回归分类模型的准确性结果
-print( 'Accuracy of LR Classifier:', lr.score( ss_X_test, y_test ) )
+print('Accuracy of LR Classifier:', lr.score(ss_X_test, y_test))
 # 使用classification_report模块获得LogisticRegression的其他三个指标结果
-print( classification_report( y_test, lr_y_predict,
-                              target_names = ['Benign', 'Malignant'] ) )
+print(classification_report(y_test, lr_y_predict, target_names=['Benign', 'Malignant']))
 # 使用随机梯度下降分类模型自带评分函数score获得随机梯度下降分类模型的准确性结果
-print( 'Accuracy of SGDC Classifier:', sgdc.score( ss_X_test, y_test ) )
+print('Accuracy of SGDC Classifier:', sgdc.score(ss_X_test, y_test))
 # 使用classification_report模块获得SGDClassifier的其他三个指标结果
-print( classification_report( y_test, sgdc_y_predict,
-                              target_names = ['Benign', 'Malignant'] ) )
+print(classification_report(y_test, sgdc_y_predict, target_names=['Benign', 'Malignant']))

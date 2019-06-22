@@ -29,20 +29,18 @@ print( vec.get_feature_names(  ) )
 
 # 从sklearn.datasets导入20类新闻文本数据抓取器
 from sklearn.datasets import fetch_20newsgroups
+
 # 从互联网爬下新闻样本，参数条件subset = 'all'表示下载全部近2万条新闻文本
-news = fetch_20newsgroups( subset = 'all' )
+news = fetch_20newsgroups(subset='all')
 # 查验数据规模和细节
-print( len( news.data ) )
+print(len(news.data))
 # print( news.data[ 0 ] )
 
 # 从sklearn.cross_validation导入train_test_split模块分割数据集
 from sklearn.cross_validation import train_test_split
+
 # 对news中的数据data进行分割，25%作为测试集，其余75%作为训练集
-X_train, X_test, y_train, y_test =\
-train_test_split( news.data,
-                  news.target,
-                  test_size = 0.25,
-                  random_state = 33 )
+X_train, X_test, y_train, y_test = train_test_split(news.data, news.target, test_size=0.25, random_state=33)
 #############################################################
 ###################################################
 ##使用CountVectorizer，并且【不去掉英文停用词】
@@ -50,34 +48,33 @@ train_test_split( news.data,
 ###################################################
 # 从sklearn.feature_extraction.text导入CountVectorizer模块
 from sklearn.feature_extraction.text import CountVectorizer
+
 # 采用默认配置对CountVectorizer进行初始化，默认配置不会去除英文停用词
-count_vec = CountVectorizer(  )
+count_vec = CountVectorizer()
 # 只使用词频统计的方式将训练集、测试集的文本数据转化为特征向量
 # 训练集：模型名.fit_transform( X_train )
 # 测试集：模型名.transform( X_test )
 # 这是第4次栽跟头了！！！！
 # 栽跟头错误反馈信息：关于测试集y类变量的'维度不匹配'
-X_train_count_vec = count_vec.fit_transform( X_train )
-X_test_count_vec = count_vec.transform( X_test )
+X_train_count_vec = count_vec.fit_transform(X_train)
+X_test_count_vec = count_vec.transform(X_test)
 # 从sklearn.naive_bayes导入朴素贝叶斯模块
 from sklearn.naive_bayes import MultinomialNB
+
 # 使用默认配置对朴素贝叶斯分类器进行初始化
-mnb_count_vec = MultinomialNB(  )
+mnb_count_vec = MultinomialNB()
 # 使用朴素贝叶斯分类器对CountVectorizer(未去除停用词)后的训练样本进行参数训练
-mnb_count_vec.fit( X_train_count_vec, y_train )
+mnb_count_vec.fit(X_train_count_vec, y_train)
 # 输出CountVectorizer模型准确性结果
-print( 'The accuracy of classifying 20newsgroups using NaiveBayes'\
-       '(CountVectorizer without filting stopwords):',
-       mnb_count_vec.score( X_test_count_vec,
-                            y_test ) )
+print('The accuracy of classifying 20newsgroups using NaiveBayes' \
+      '(CountVectorizer without filting stopwords):', mnb_count_vec.score(X_test_count_vec, y_test))
 # 将分类预测结果保存在变量y_count_vec_predict中
-y_count_vec_predict = mnb_count_vec.predict( X_test_count_vec )
+y_count_vec_predict = mnb_count_vec.predict(X_test_count_vec)
 # 从sklearn.metrics导入classification_report模块
 from sklearn.metrics import classification_report
+
 # 输出更加详细的其他评价分类性能的指标
-print( classification_report( y_test,
-                              y_count_vec_predict,
-                              target_names = news.target_names ) )
+print(classification_report(y_test, y_count_vec_predict, target_names=news.target_names))
 ###################################################################
 ###################################################
 ##使用TfidfVectorizer，并且【不去掉英文停用词】
@@ -85,29 +82,26 @@ print( classification_report( y_test,
 ###################################################
 # 从sklearn.feature_extrction.text导入TfidfVectorizer模块
 from sklearn.feature_extraction.text import TfidfVectorizer
+
 # 采用默认配置对TfidfVectorizer进行初始化，即未去除英文停用词
-tfidf_vec = TfidfVectorizer(  )
+tfidf_vec = TfidfVectorizer()
 # 使用TfdifVectorizer将训练集、测试集文本转化为特征向量
 # 请注意训练集、测试集转化所用函数的不同
-X_train_tfidf_vec = tfidf_vec.fit_transform( X_train )
-X_test_tfidf_vec = tfidf_vec.transform( X_test )
+X_train_tfidf_vec = tfidf_vec.fit_transform(X_train)
+X_test_tfidf_vec = tfidf_vec.transform(X_test)
 # 依然使用默认配置的朴素贝叶斯分类器，对TfidfVectorizer特征化的方式进行性能评估
 # MultinomialNB模块在前述已经导入
-mnb_tfidf_vec = MultinomialNB(  )
+mnb_tfidf_vec = MultinomialNB()
 # 使用朴素贝叶斯分类器对TfidfVectorizer(未去除停用词)后的训练样本进行参数训练
-mnb_tfidf_vec.fit( X_train_tfidf_vec, y_train )
+mnb_tfidf_vec.fit(X_train_tfidf_vec, y_train)
 # 输出TfidfVectorizer模型准确性结果
-print( 'The accuracy of classifying 20newsgroups using NaiveBayes'\
-       '(TfidfVectorizer without filting stopwords):',
-       mnb_tfidf_vec.score( X_test_tfidf_vec,
-                            y_test ) )
+print('The accuracy of classifying 20newsgroups using NaiveBayes' \
+      '(TfidfVectorizer without filting stopwords):', mnb_tfidf_vec.score(X_test_tfidf_vec, y_test))
 # 将分类预测结果保存在变量y_tfidf_vec_predict中
-y_tfidf_vec_predict = mnb_tfidf_vec.predict( X_test_tfidf_vec )
+y_tfidf_vec_predict = mnb_tfidf_vec.predict(X_test_tfidf_vec)
 # 在前述已经导入classification_report模块
 # 输出更加详细的其他评价分类性能的指标
-print( classification_report( y_test,
-                              y_tfidf_vec_predict,
-                              target_names = news.target_names ) )
+print(classification_report(y_test, y_tfidf_vec_predict, target_names=news.target_names))
 ###################################################################
 #############################################################
 ###################################################
@@ -116,53 +110,39 @@ print( classification_report( y_test,
 ###################################################
 # 继续沿用前述导入的模块、获得的数据
 # 使用停用词过滤配置初始化CountVectorizer、TfidfVectorzer模型
-count_filter_vec, tfidf_filter_vec =\
-CountVectorizer( analyzer = 'word',
-                 stop_words = 'english' ),\
-TfidfVectorizer( analyzer = 'word',
-                 stop_words = 'english' )
+count_filter_vec, tfidf_filter_vec = CountVectorizer(analyzer='word', stop_words='english'), TfidfVectorizer(analyzer='word', stop_words='english')
 
 # 使用带有停用词过滤的CountVectorizer、TfidfVectorizer模型对训练集、测试集进行特征化
-X_train_count_filter_vec = count_filter_vec.fit_transform( X_train )
-X_test_count_filter_vec = count_filter_vec.transform( X_test )
+X_train_count_filter_vec = count_filter_vec.fit_transform(X_train)
+X_test_count_filter_vec = count_filter_vec.transform(X_test)
 
-X_train_tfidf_filter_vec = tfidf_filter_vec.fit_transform( X_train )
-X_test_tfidf_filter_vec = tfidf_filter_vec.transform( X_test )
+X_train_tfidf_filter_vec = tfidf_filter_vec.fit_transform(X_train)
+X_test_tfidf_filter_vec = tfidf_filter_vec.transform(X_test)
 # 使用默认配置初始化朴素贝叶斯分类器
-mnb_count_filter_vec = MultinomialNB(  )
+mnb_count_filter_vec = MultinomialNB()
 # 进行CountVectorizer模型参数训练
-mnb_count_filter_vec.fit( X_train_count_filter_vec, y_train )
+mnb_count_filter_vec.fit(X_train_count_filter_vec, y_train)
 # 输出CountVectorizer模型准确性结果及详细性能评估
-print( 'The accuracy of classifying 20newsgroups using NaiveBayes'\
-       '(CountVectorizer with filting stopwords):',
-       mnb_count_filter_vec.score( X_test_count_filter_vec,
-                            y_test ) )
+print('The accuracy of classifying 20newsgroups using NaiveBayes' \
+      '(CountVectorizer with filting stopwords):', mnb_count_filter_vec.score(X_test_count_filter_vec, y_test))
 # 将分类预测结果保存在变量y_count_filter_vec_predict中
-y_count_filter_vec_predict =\
-mnb_count_filter_vec.predict( X_test_count_filter_vec )
+y_count_filter_vec_predict = mnb_count_filter_vec.predict(X_test_count_filter_vec)
 # 在前述已经导入classification_report模块
 # 输出更加详细的其他评价分类性能的指标
-print( classification_report( y_test,
-                              y_count_filter_vec_predict,
-                              target_names = news.target_names ) )
+print(classification_report(y_test, y_count_filter_vec_predict, target_names=news.target_names))
 ##############
 # 再使用默认配置初始化朴素贝叶斯分类器
-mnb_tfidf_filter_vec = MultinomialNB(  )
+mnb_tfidf_filter_vec = MultinomialNB()
 # 进行TfidfVectorizer模型参数训练
-mnb_tfidf_filter_vec.fit( X_train_tfidf_filter_vec, y_train )
+mnb_tfidf_filter_vec.fit(X_train_tfidf_filter_vec, y_train)
 # 输出TfidfVectorizer模型准确性结果及详细性能评估
-print( 'The accuracy of classifying 20newsgroups using NaiveBayes'\
-       '(TfidfVectorizer with filting stopwords):',
-       mnb_tfidf_filter_vec.score( X_test_tfidf_filter_vec,
-                            y_test ) )
+print('The accuracy of classifying 20newsgroups using NaiveBayes' \
+      '(TfidfVectorizer with filting stopwords):', mnb_tfidf_filter_vec.score(X_test_tfidf_filter_vec, y_test))
 # 将分类预测结果保存在变量y_count_filter_vec_predict中
-y_tfidf_filter_vec_predict =\
-mnb_tfidf_filter_vec.predict( X_test_tfidf_filter_vec )
+y_tfidf_filter_vec_predict = mnb_tfidf_filter_vec.predict(X_test_tfidf_filter_vec)
 # 在前述已经导入classification_report模块
 # 输出更加详细的其他评价分类性能的指标
-print( classification_report( y_test,
-                              y_tfidf_filter_vec_predict,
-                              target_names = news.target_names ) )
+print(classification_report(y_test, y_tfidf_filter_vec_predict, target_names=news.target_names))
 ####################################################################
 '''
 运行结果：【单独使用CountVectorizer(未去除英文停用词)】
